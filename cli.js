@@ -119,33 +119,24 @@ function calculateTypeMode(argv) {
 }
 
 async function startBuild(mode, type, isWatch) {
-    switch (mode) {
-        case buildModeTypes.development: {
-            process.env.NODE_ENV = 'development';
-            {
-                switch (type) {
-                    case buildSideTipes.client: {
-                        console.log(chalk.blue('Client'), 'build is started. \n');
-                        const webpackClientBuildConfig = require('./scripts/build/webpack/config/client/webpack.config')();
+    process.env.NODE_ENV = mode;
 
-                        build(webpackClientBuildConfig, isWatch);
-                        break;
-                    }
-                    case buildSideTipes.server: {
-                        console.log(chalk.blue('Server build is started.'));
-                        const webpackServerBuildConfig = require('./scripts/build/webpack/config/server/webpack.config')();
-                        build(webpackServerBuildConfig, isWatch);
-                        break;
-                    }
-                    default : {
-                        break;
-                    }
-                }
-            }
+    switch (type) {
+        case buildSideTipes.client: {
+            console.log(chalk.blue('Client'), 'build is started. \n');
+            const webpackClientBuildConfig = require('./scripts/build/webpack/config/client/webpack.config')();
+            build(webpackClientBuildConfig, isWatch);
             break;
         }
-        default:
+        case buildSideTipes.server: {
+            console.log(chalk.blue('Server build is started.'));
+            const webpackServerBuildConfig = require('./scripts/build/webpack/config/server/webpack.config')();
+            build(webpackServerBuildConfig, isWatch);
             break;
+        }
+        default : {
+            break;
+        }
     }
 }
 
