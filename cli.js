@@ -18,9 +18,9 @@ const buildSideTipes = {
     library: 'library',
 }
 
-function buildStatusReport({ stats, warnings }) {
+function buildStatusReport({ stats, warnings, type }) {
     if (warnings.length) {
-        console.log(chalk.yellow(`Compiled ompiled with warnings.\n`));
+        console.log(chalk.yellow(`${type} compiled with warnings.\n`));
         console.log(warnings.join('\n\n'));
         console.log(
             `Search for the ${chalk.underline(chalk.yellow('keywords'))} to learn more about each warning.`
@@ -29,14 +29,14 @@ function buildStatusReport({ stats, warnings }) {
             `To ignore, add ${chalk.cyan('// eslint-disable-next-line')} to the line before.`
         );
     } else {
-        console.log(chalk.green(`Compiled successfully.\n`));
+        console.log(chalk.green(`${chalk.bold(type)} compiled successfully.\n`));
     }
 }
 
-function build(config, isWatch) {
+function build(config, isWatch, type) {
     function copileDetector(err, stats) {
         if (err) {
-            console.log(chalk.red('Failed to compile client.\n'));
+            console.log(chalk.red(`Failed to compile ${type}.\n`));
             console.log('err', err)
             chalk.red(printBuildError(err));
             return;
@@ -55,7 +55,7 @@ function build(config, isWatch) {
             }
 
             const err = new Error(messages.errors.join('\n\n'));
-            console.log(chalk.red('Failed to compile client.\n'));
+            console.log(chalk.red(`Failed to compile ${type}.\n`));
             console.log('err', err)
             printBuildError(err);
             return;
@@ -64,13 +64,15 @@ function build(config, isWatch) {
         buildStatusReport({
             stats,
             warnings: messages.warnings,
+            type
         });
     }
 
     let compiler = webpack(config);
 
+    // Compiler Hook
     compiler.hooks.thisCompilation.tap('thisCompilation', (params, callback) => {
-        console.log(chalk.blue('Compilation in progress...'));
+        console.log(chalk.blue(`${chalk.bold(type)} compilation in progress...`));
     });
 
     if (isWatch) {
@@ -79,7 +81,6 @@ function build(config, isWatch) {
             poll: undefined
         }, copileDetector);
     } else {
-        console.log('compiler.run')
         compiler.run(copileDetector);
     }
 }
@@ -104,40 +105,35 @@ function calculateBuildMode(argv) {
 function calculateTypeMode(argv) {
     const type = argv.type || argv.t;
 
-    const isTypeCorrect = Object.values(buildSideTipes).some((buildSideType) => {
-        return type === buildSideType;
+    if (typeof type !== 'string') {
+        console.log('You should set type in available value. See --help for explain.');
+        console.log(new Error('Incorrect type parameter.'));
+    }
+
+    const types = type.split(',');
+
+    const isTypesCorrect = types.every((type) => {
+        return !!buildSideTipes[type];
     });
     
-    if (!isTypeCorrect) {
+    if (!isTypesCorrect) {
         console.log('You should set type in available value. See --help for explain.');
         console.log(new Error('Incorrect type parameter.'));
     }
 
     console.log(`Build started for ${type} side. \n`);
 
-    return type;
+    return types;
 }
 
-async function startBuild(mode, type, isWatch) {
+async function startBuild(mode, types, isWatch) {
     process.env.NODE_ENV = mode;
 
-    switch (type) {
-        case buildSideTipes.client: {
-            console.log(chalk.blue('Client'), 'build is started. \n');
-            const webpackClientBuildConfig = require('./scripts/build/webpack/config/client/webpack.config')();
-            build(webpackClientBuildConfig, isWatch);
-            break;
-        }
-        case buildSideTipes.server: {
-            console.log(chalk.blue('Server build is started.'));
-            const webpackServerBuildConfig = require('./scripts/build/webpack/config/server/webpack.config')();
-            build(webpackServerBuildConfig, isWatch);
-            break;
-        }
-        default : {
-            break;
-        }
-    }
+    types.forEach(async (type) => {
+        console.log(`${chalk.blue.bold(type)} build is started. \n`);
+        const webpackClientBuildConfig = require(`./scripts/build/webpack/config/${type}/webpack.config`)();
+        build(webpackClientBuildConfig, isWatch, type);
+    });
 }
 
 yargs(hideBin(process.argv))
@@ -158,9 +154,9 @@ yargs(hideBin(process.argv))
         console.log(chalk.blue('Start project build...'));
 
         const mode = calculateBuildMode(argv);
-        const type = calculateTypeMode(argv);
+        const types = calculateTypeMode(argv);
         const watch = typeof argv.watch === 'boolean' ? argv.watch : false;
-        startBuild(mode, type, watch);
+        startBuild(mode, types, watch);
     })
     .option('mode', {
         alias: 'm',
