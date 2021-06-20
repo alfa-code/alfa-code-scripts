@@ -18,46 +18,6 @@ const buildSideTipes = {
     library: 'library',
 }
 
-function build(config, isWatch) {
-    let compiler = webpack(config);
-    return new Promise((resolve, reject) => {
-        function copileDetector(err, stats) {
-            if (err) {
-                return reject(err);
-            }
-            console.log(chalk.blue('Next build is compiling...'));
-            const rawMessages = stats.toJson({}, true);
-            const messages = formatWebpackMessages({
-                errors: rawMessages.errors.map((e) => e.message),
-                warnings: rawMessages.warnings.map((e) => e.message),
-            });
-            if (messages.errors.length) {
-                // Only keep the first error. Others are often indicative
-                // of the same problem, but confuse the reader with noise.
-                if (messages.errors.length > 1) {
-                    messages.errors.length = 1;
-                }
-                return reject(new Error(messages.errors.join('\n\n')));
-            }
-
-            return resolve({
-                stats,
-                warnings: messages.warnings,
-            });
-        }
-
-        if (isWatch) {
-            compiler.watch({
-                aggregateTimeout: 300,
-                poll: undefined
-            }, copileDetector);
-        } else {
-            console.log('compiler.run')
-            compiler.run(copileDetector);
-        }
-    });
-}
-
 function buildStatusReport({ stats, warnings }) {
     if (warnings.length) {
         console.log(chalk.yellow(`Compiled ompiled with warnings.\n`));
@@ -73,15 +33,55 @@ function buildStatusReport({ stats, warnings }) {
     }
 }
 
-async function buildWrapper(webpackConfig, type, isWatch) {
-    build(webpackConfig, isWatch)
-        .then(buildStatusReport)
-        .catch((err) => {
+function build(config, isWatch) {
+    function copileDetector(err, stats) {
+        if (err) {
+            console.log(chalk.red('Failed to compile client.\n'));
+            console.log('err', err)
+            chalk.red(printBuildError(err));
+            return;
+            // process.exit(1);
+        }
+        const rawMessages = stats.toJson({}, true);
+        const messages = formatWebpackMessages({
+            errors: rawMessages.errors.map((e) => e.message),
+            warnings: rawMessages.warnings.map((e) => e.message),
+        });
+        if (messages.errors.length) {
+            // Only keep the first error. Others are often indicative
+            // of the same problem, but confuse the reader with noise.
+            if (messages.errors.length > 1) {
+                messages.errors.length = 1;
+            }
+
+            const err = new Error(messages.errors.join('\n\n'));
             console.log(chalk.red('Failed to compile client.\n'));
             console.log('err', err)
             printBuildError(err);
-            process.exit(1);
+            return;
+        }
+
+        buildStatusReport({
+            stats,
+            warnings: messages.warnings,
         });
+    }
+
+    let compiler = webpack(config);
+
+    compiler.hooks.thisCompilation.tap('thisCompilation', (params, callback) => {
+        console.log(chalk.blue('Compilation in progress...'));
+    });
+
+    if (isWatch) {
+        compiler.watch({
+            aggregateTimeout: 300,
+            poll: undefined
+        }, copileDetector);
+    } else {
+        console.log('compiler.run')
+        compiler.run(copileDetector);
+    }
 }
 
 function calculateBuildMode(argv) {
@@ -113,7 +113,7 @@ function calculateTypeMode(argv) {
         console.log(new Error('Incorrect type parameter.'));
     }
 
-    console.log(`Build started for ${type} side.`);
+    console.log(`Build started for ${type} side. \n`);
 
     return type;
 }
@@ -125,16 +125,16 @@ async function startBuild(mode, type, isWatch) {
             {
                 switch (type) {
                     case buildSideTipes.client: {
-                        console.log(chalk.blue('Client build is started.'));
+                        console.log(chalk.blue('Client'), 'build is started. \n');
                         const webpackClientBuildConfig = require('./scripts/build/webpack/config/client/webpack.config')();
 
-                        buildWrapper(webpackClientBuildConfig, 'Client', isWatch);
+                        build(webpackClientBuildConfig, isWatch);
                         break;
                     }
                     case buildSideTipes.server: {
                         console.log(chalk.blue('Server build is started.'));
                         const webpackServerBuildConfig = require('./scripts/build/webpack/config/server/webpack.config')();
-                        buildWrapper(webpackServerBuildConfig, 'Server');
+                        build(webpackServerBuildConfig, isWatch);
                         break;
                     }
                     default : {
@@ -150,7 +150,7 @@ async function startBuild(mode, type, isWatch) {
 }
 
 yargs(hideBin(process.argv))
-    .command('build', 'Start project build', {
+    .command('build', 'Start project build \n', {
         mode: {
             alias: 'm',
             default: 'production'
