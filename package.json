@@ -18,6 +18,7 @@
         "file-loader": "^6.2.0",
         "html-webpack-plugin": "^5.3.1",
         "mini-css-extract-plugin": "^1.6.0",
+        "null-loader": "^4.0.1",
         "react-dev-utils": "^11.0.4",
         "sass": "^1.35.1",
         "sass-loader": "^12.1.0",
@@ -25,6 +26,7 @@
         "webpack": "^5.39.1",
         "webpack-build-notifier": "^2.3.0",
         "webpack-merge": "^5.8.0",
+        "webpack-node-externals": "^3.0.0",
         "yargs": "^17.0.1"
     }
 }
