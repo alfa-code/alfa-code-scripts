@@ -1,0 +1,30 @@
+{
+    "name": "@alfa-code/alfa-code-scripts",
+    "description": "Some settings for NodeJS projects (Builders, Linters, Tests, and others artifacts)",
+    "bin": {
+        "alfa-code-scripts": "./cli.js"
+    },
+    "version": "1.0.0",
+    "main": "index.js",
+    "repository": "git@github.com:alfa-code/alfa-code-scripts.git",
+    "author": "Hydrock <hydrock@yandex.ru>",
+    "license": "GNU GENERAL PUBLIC LICENSE",
+    "dependencies": {
+        "@types/yargs": "^17.0.0",
+        "assets-webpack-plugin": "^7.1.0",
+        "chalk": "^4.1.1",
+        "css-loader": "^5.2.6",
+        "css-minimizer-webpack-plugin": "^3.0.1",
+        "file-loader": "^6.2.0",
+        "html-webpack-plugin": "^5.3.1",
+        "mini-css-extract-plugin": "^1.6.0",
+        "react-dev-utils": "^11.0.4",
+        "sass": "^1.35.1",
+        "sass-loader": "^12.1.0",
+        "uglifyjs-webpack-plugin": "^2.2.0",
+        "webpack": "^5.39.1",
+        "webpack-build-notifier": "^2.3.0",
+        "webpack-merge": "^5.8.0",
+        "yargs": "^17.0.1"
+    }
+}
