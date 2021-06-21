@@ -19,24 +19,20 @@ const devConfig = {
             {
                 test: /\.css$/,
                 use: [
-                    // 'style-loader',
                     MiniCssExtractPlugin.loader,
-                    'css-loader'
+                    'css-loader',
+                    'sass-loader',
                 ],
             },
             {
                 test: [/\.module\.scss$/],
                 use: [
-                    // require.resolve('style-loader'),
                     MiniCssExtractPlugin.loader,
                     {
                         loader: require.resolve('css-loader'),
                         options: {
                             modules: {
-                                // localIdentName: '[name]__[local]___[hash:base64:5]'
                                 localIdentName: '[name]__[local]'
-                                // localIdentName: '[hash:base64]'
-
                             }
                         }
                     },

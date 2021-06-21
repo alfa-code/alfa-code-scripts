@@ -25,18 +25,8 @@ const defaultConfig = {
             {
                 test: /^((?!\.module).)*scss$/i,
                 use: [
-                    // Creates `style` nodes from JS strings
                     'style-loader',
-                    // {
-                    //     loader: MiniCssExtractPlugin.loader,
-                    //     options: {
-                    //         // hmr: isDevelopment,
-                    //         reloadAll: true,
-                    //     },
-                    // },
-                    // Translates CSS into CommonJS
                     'css-loader',
-                    // Compiles Sass to CSS
                     'sass-loader'
                 ],
             },
