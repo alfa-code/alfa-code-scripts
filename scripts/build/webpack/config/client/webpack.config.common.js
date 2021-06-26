@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const fileLoader = require.resolve('file-loader');
 const AssetsPlugin = require('assets-webpack-plugin');
 
 const rootPath = process.cwd();
@@ -31,55 +30,19 @@ const defaultConfig = {
                 ],
             },
             {
-                test: /\.(ttf|eot|woff|woff2)$/,
-                loader: fileLoader,
-                options: {
-                    name: 'fonts/[name].[ext]'
-                }
-            },
-            {
-                test: /\.(mp3|aac)$/,
-                loader: fileLoader,
-                options: {
-                    name: 'sounds/[name].[ext]'
-                }
-            },
-            {
-                test: /\.svg/,
-                use: {
-                    loader: 'file-loader',
-                    options: {
-                        name: '[name].[ext]',
-                        outputPath: 'svg/'
-                    }
-                }
-            },
-            {
-                test: /\.(png|jpe?g|gif)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: 'images/'
-                        }
-                    },
+                test: [
+                    /\.(ttf|eot|woff|woff2)$/,
+                    /\.(mp3|aac)$/,
+                    /\.svg/,
+                    /\.(png|jpe?g|gif|ico)$/i,
+                    /\.(xml)$/i,
+                    /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/
                 ],
+                type: 'asset/resource',
+                generator: {
+                    filename: '[name][ext]'
+                }
             },
-            {
-                test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: (url) => {
-                                return `fonts/${url}`;
-                            }
-                        }
-                    }
-                ]
-            }
         ]
     },
     resolve: {
@@ -104,7 +67,7 @@ const defaultConfig = {
     plugins: [
         new webpack.ProvidePlugin({
             Buffer: ['buffer', 'Buffer'],
-          }),
+        }),
         new AssetsPlugin({
             filename: 'assets.client.json',
             path: path.join(rootPath, '.build/'),

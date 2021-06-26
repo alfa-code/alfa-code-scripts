@@ -1,18 +1,15 @@
 const path = require('path');
-// const webpack = require('webpack');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 
 const rootPath = process.cwd();
-// const scssRegex = /^((?!\.module).)*scss$/i;
 
 const devConfig = {
     mode: 'development',
     output: {
         filename: 'app.js',
-        path: path.join(rootPath, '.build/assets/'),
-        publicPath: '/assets/'
+        path: path.join(rootPath, '.build/static/'),
+        publicPath: '/static/'
     },
     module: {
         rules: [

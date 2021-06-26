@@ -1,6 +1,6 @@
 const path = require('path');
 
-const fileLoader = require.resolve('file-loader');
+// const fileLoader = require.resolve('file-loader');
 
 const rootPath = process.cwd();
 
@@ -11,7 +11,11 @@ const buildPath = path.join(rootPath, '.build');
 const defaultConfig = {
     target: 'node',
     entry: './src/server/index.ts',
-    // rootPath: process.cwd(),
+    output: {
+        filename: 'server.js',
+        path: buildPath,
+        publicPath: '/'
+    },
     module: {
         rules: [
             {
@@ -20,54 +24,18 @@ const defaultConfig = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.(ttf|eot|woff|woff2)$/,
-                loader: fileLoader,
-                options: {
-                    name: 'fonts/[name].[ext]'
-                }
-            },
-            {
-                test: /\.(mp3|aac)$/,
-                loader: fileLoader,
-                options: {
-                    name: 'sounds/[name].[ext]'
-                }
-            },
-            {
-                test: /\.svg/,
-                use: {
-                    loader: 'file-loader',
-                    options: {
-                        name: '[name].[ext]',
-                        outputPath: 'svg/'
-                    }
-                }
-            },
-            {
-                test: /\.(png|jpe?g|gif)$/i,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: 'images/'
-                        }
-                    },
+                test: [
+                    /\.(ttf|eot|woff|woff2)$/,
+                    /\.(mp3|aac)$/,
+                    /\.svg/,
+                    /\.(png|jpe?g|gif|ico)$/i,
+                    /\.(xml)$/i,
+                    /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/
                 ],
-            },
-            {
-                test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: '[name].[ext]',
-                            outputPath: (url) => {
-                                return `fonts/${url}`;
-                            }
-                        }
-                    }
-                ]
+                type: 'asset/resource',
+                generator: {
+                    emit: false,
+                },
             }
         ]
     },
@@ -89,11 +57,6 @@ const defaultConfig = {
             Types: path.join(rootPath, './src/types/'),
             Utils: path.join(rootPath, './src/utils/'),
         }
-    },
-    output: {
-        filename: 'server.js',
-        path: buildPath,
-        publicPath: '/assets/'
     },
     externals: [nodeExternals({
         // this WILL include `jquery` and `webpack/hot/dev-server` in the bundle, as well as `lodash/*`

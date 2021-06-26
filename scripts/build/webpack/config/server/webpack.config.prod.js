@@ -1,6 +1,4 @@
-// const path = require('path');
-
-// const rootPath = process.cwd();
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin')
 
 const devConfig = {
     mode: 'production',
@@ -10,21 +8,6 @@ const devConfig = {
                 test: /\.css$/,
                 loader: require.resolve('null-loader'),
             },
-            // {
-            //     test: /\.css$/,
-            //     use: [
-            //         // 'style-loader',
-            //         'css-loader'
-            //     ],
-            // },
-            // {
-            //     loader: require.resolve('css-loader'),
-            //     options: {
-            //         modules: true,
-            //         exportOnlyLocals: true,
-            //         getLocalIdent: getCSSModuleLocalIdent
-            //     },
-            // }
             {
                 test: [/\.module\.scss$/],
                 use: [
@@ -51,7 +34,14 @@ const devConfig = {
                 ]
             },
         ]
-    }
+    },
+    plugins: [
+        new FaviconsWebpackPlugin({
+            outputPath: 'static/favicons',
+            logo: 'src/assets/images/favicon.svg',
+            cache: true,
+        })
+    ]
 };
 
 module.exports = devConfig;

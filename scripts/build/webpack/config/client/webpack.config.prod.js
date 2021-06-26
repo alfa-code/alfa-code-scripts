@@ -1,19 +1,14 @@
 const path = require('path');
-// const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const TerserJSPlugin = require('terser-webpack-plugin');
-// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 const rootPath = process.cwd();
-// const scssRegex = /^((?!\.module).)*scss$/i;
 
 const devConfig = {
     mode: 'production',
     optimization: {
-        // minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
         minimizer: [
             new UglifyJsPlugin(),
             new CssMinimizerPlugin(),
@@ -21,8 +16,8 @@ const devConfig = {
     },
     output: {
         filename: 'app.[hash].js',
-        path: path.join(rootPath, '.build/assets/'),
-        publicPath: '/assets/'
+        path: path.join(rootPath, '.build/static/'),
+        publicPath: '/static/'
     },
     module: {
         rules: [
