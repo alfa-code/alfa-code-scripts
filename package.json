@@ -1,6 +1,6 @@
 {
     "name": "@alfa-code/alfa-code-scripts",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "description": "Some settings for NodeJS projects (Builders, Linters, Tests, and others artifacts)",
     "repository": "git@github.com:alfa-code/alfa-code-scripts.git",
     "license": "GNU GENERAL PUBLIC LICENSE",
@@ -39,5 +39,8 @@
         "webpack-merge": "^5.8.0",
         "webpack-node-externals": "^3.0.0",
         "yargs": "^17.0.1"
+    },
+    "devDependencies": {
+        "webpackbar": "^5.0.0-3"
     }
 }

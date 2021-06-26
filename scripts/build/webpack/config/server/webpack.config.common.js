@@ -1,10 +1,9 @@
+const nodeExternals = require('webpack-node-externals');
+const WebpackBar = require('webpackbar');
+
 const path = require('path');
 
-// const fileLoader = require.resolve('file-loader');
-
 const rootPath = process.cwd();
-
-const nodeExternals = require('webpack-node-externals');
 
 const buildPath = path.join(rootPath, '.build');
 
@@ -62,6 +61,9 @@ const defaultConfig = {
         // this WILL include `jquery` and `webpack/hot/dev-server` in the bundle, as well as `lodash/*`
         allowlist: []
     })],
+    plugins: [
+        new WebpackBar()
+    ]
 };
 
 module.exports = defaultConfig;
