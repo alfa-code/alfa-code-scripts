@@ -38,7 +38,6 @@
         "webpack-build-notifier": "^2.3.0",
         "webpack-merge": "^5.8.0",
         "webpack-node-externals": "^3.0.0",
-        "webpackbar": "^5.0.0-3",
         "yargs": "^17.0.1"
     },
     "devDependencies": {}

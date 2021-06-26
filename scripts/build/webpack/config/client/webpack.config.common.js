@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
-const WebpackBar = require('webpackbar');
 
 const rootPath = process.cwd();
 
@@ -73,8 +72,7 @@ const defaultConfig = {
             filename: 'assets.client.json',
             path: path.join(rootPath, '.build/'),
             prettyPrint: true
-        }),
-        new WebpackBar()
+        })
     ]
 };
 
