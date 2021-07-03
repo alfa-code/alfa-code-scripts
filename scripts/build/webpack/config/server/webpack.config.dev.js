@@ -2,6 +2,7 @@ const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 
 const devConfig = {
     mode: 'development',
+    devtool: 'inline-source-map',
     module: {
         rules: [
             {

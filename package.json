@@ -1,6 +1,6 @@
 {
     "name": "@alfa-code/alfa-code-scripts",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "Some settings for NodeJS projects (Builders, Linters, Tests, and others artifacts)",
     "repository": "git@github.com:alfa-code/alfa-code-scripts.git",
     "license": "GNU GENERAL PUBLIC LICENSE",

@@ -6,6 +6,7 @@ const rootPath = process.cwd();
 
 const devConfig = {
     mode: 'development',
+    devtool: 'inline-source-map',
     output: {
         filename: 'app.js',
         path: path.join(rootPath, '.build/static/'),
