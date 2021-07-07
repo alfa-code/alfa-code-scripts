@@ -14,6 +14,7 @@
         "deploy": "npm publish --access public"
     },
     "dependencies": {
+        "@loadable/webpack-plugin": "^5.15.0",
         "@types/yargs": "^17.0.0",
         "assets-webpack-plugin": "^7.1.0",
         "chalk": "^4.1.1",
@@ -33,6 +34,7 @@
         "ts-jest": "^27.0.3",
         "ts-loader": "^9.2.3",
         "typescript": "^4.3.4",
+        "typescript-loadable-components-plugin": "^1.0.2",
         "uglifyjs-webpack-plugin": "^2.2.0",
         "webpack": "^5.40.0",
         "webpack-build-notifier": "^2.3.0",

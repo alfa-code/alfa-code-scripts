@@ -1,4 +1,6 @@
 const nodeExternals = require('webpack-node-externals');
+const createLoadableComponentsTransformer = require('typescript-loadable-components-plugin').default;
+const LoadablePlugin = require('@loadable/webpack-plugin');
 
 const path = require('path');
 
@@ -12,14 +14,20 @@ const defaultConfig = {
     output: {
         filename: 'server.js',
         path: buildPath,
-        publicPath: '/'
+        publicPath: '/',
+        assetModuleFilename: 'static/[name][ext]'
     },
     module: {
         rules: [
             {
                 test: /\.ts(x?)$/,
-                use: 'ts-loader',
+                loader: 'ts-loader',
                 exclude: /node_modules/,
+                options: {
+                    getCustomTransformers: (program) => ({
+                        before: [createLoadableComponentsTransformer(program, {})],
+                    }),
+                },
             },
             {
                 test: [
@@ -59,7 +67,8 @@ const defaultConfig = {
     externals: [nodeExternals({
         // this WILL include `jquery` and `webpack/hot/dev-server` in the bundle, as well as `lodash/*`
         allowlist: []
-    })]
+    })],
+    plugins: [new LoadablePlugin()]
 };
 
 module.exports = defaultConfig;
