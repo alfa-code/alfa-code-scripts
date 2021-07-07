@@ -1,6 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const AssetsPlugin = require('assets-webpack-plugin');
+const LoadablePlugin = require('@loadable/webpack-plugin');
+const createLoadableComponentsTransformer = require('typescript-loadable-components-plugin').default;
 
 const rootPath = process.cwd();
 
@@ -17,9 +19,14 @@ const defaultConfig = {
                 options: { inline: 'no-fallback' }
             },
             {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
+                test: /\.ts(x?)$/,
+                loader: 'ts-loader',
                 exclude: /node_modules/,
+                options: {
+                    getCustomTransformers: (program) => ({
+                        before: [createLoadableComponentsTransformer(program, {})],
+                    }),
+                },
             },
             {
                 test: /^((?!\.module).)*scss$/i,
@@ -72,7 +79,8 @@ const defaultConfig = {
             filename: 'assets.client.json',
             path: path.join(rootPath, '.build/'),
             prettyPrint: true
-        })
+        }),
+        new LoadablePlugin()
     ]
 };
 
